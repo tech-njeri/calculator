@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <style>
+        body {
+            background-color: #2e2e2e;
+            width: auto;
+            margin: 0;
+            margin-left: 35px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .calculator {
+            background-color: #2e2e2e;
+            width: 260px;
+            height: 425px;
+            border: 2px solid #3a3a3a;
+            box-shadow: 4px 4px 8px #1a1a1a, -4px -4px 8px #2c2c2c, inset 4px 4px 8px #1a1a1a, inset -4px -4px 8px #2c2c2c;
+            
+            border-radius: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .keypad {
+            display: grid;
+            grid-template-columns: 40px 40px 40px 40px;
+            gap: 10px;
+        }
+
+        .key {
+            height: 40px;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            background-color: #3a3a3a;
+            color: white;
+            box-shadow: 4px 4px 8px #1a1a1a, -4px -4px 8px #2c2c2c;
+            transition: box-shadow 0.15s ease, transform 0.1s ease;
+            cursor: pointer;
+        }
+
+        .key:active {
+            box-shadow: inset 4px 4px 8px #1a1a1a, inset -4px -4px 8px #2c2c2c;
+            transform: scale(0.98);
+
+        }
+
+        .key-zero {
+            grid-column:span 2;
+            width: auto;
+        }
+
+        .display {
+            width: 216px;
+            min-height: 70px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            padding: 8px 12px;
+            text-align: right;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            box-shadow: inset 4px 4px 8px #1a1a1a, inset -4px -4px 8px #252525;
+        }
+
+        .expression {
+            font-size: 16px;
+            color: #888;
+            min-height: 20px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .result {
+            font-size: 32px;
+            color: #fff;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="display">
+            <div id="expression" class="expression"></div>
+            <div id="result" class="result">0</div>
+        </div>
+        <!-- <input type="text" id="result"> -->
+        <div class="keypad">
+            <button class="key" onclick="clr()" onkeydown="myFunction(event)">AC</button>
+            <button class="key" onclick="del()" onkeydown="myFunction(event)">C</button>
+            <button class="key" onclick="percent()">%</button>
+            <button class="key" onclick="dis('/')" onkeydown="myFunction(event)">/</button>
+
+            <button class="key" onclick="dis(7)" onkeydown="myFunction(event)">7</button>
+            <button class="key" onclick="dis(8)" onkeydown="myFunction(event)">8</button>
+            <button class="key" onclick="dis(9)" onkeydown="myFunction(event)">9</button>
+            <button class="key" onclick="dis('*')" onkeydown="myFunction(event)">*</button>
+
+            <button class="key" onclick="dis(4)">4</button>
+            <button class="key" onclick="dis(5)">5</button>
+            <button class="key" onclick="dis(6)">6</button>
+            <button class="key" onclick="dis('-')">-</button>
+
+            <button class="key" onclick="dis(1)">1</button>
+            <button class="key" onclick="dis(2)">2</button>
+            <button class="key" onclick="dis(3)">3</button>
+            <button class="key" onclick="dis('+')">+</button>
+
+            <button class="key key-zero" onclick="dis(0)">0</button>
+            <button class="key" onclick="dis('.')">.</button>
+            <button class="key" onclick="solve()">=</button>
+        </div>
+    </div>
+
+    <!-- <script>
+        function dis(val) {
+            document.getElementById("result").value += val
+        }
+
+        function myFunction(event) {
+            if (event.key == '0' || event.key == '1' || event.key == '2' || event.key == '3' || event.key == '4' || event.key == '5' || event.key == '6' || event.key == '7' || event.key == '8' || event.key == '9' || event.key == '/' || event.key == '+' || event.key == '-' || event.key == '*')
+            document.getElementById('result').value += event.key;
+        }
+
+        function solve() {
+            try {
+                const expression = document.getElementById("result").value;
+                const answer = eval(expression);
+                document.getElementById("result").value = answer;
+            } catch (error) {
+                document.getElementById("result").value = "Error";
+            }
+        }
+
+        function clr() {
+            document.getElementById("result").value = ""
+        }
+
+        function del() {
+            const resultBox = document.getElementById("result");
+            resultBox.value = resultBox.value.slice(0, -1);
+        }
+    </script> -->
+    
+    <script>
+        let expression = "";
+
+        function dis(val) {
+            expression += val;
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            document.getElementById("expression").textContent = expression;
+
+            try {
+                const preview = eval(expression);
+                document.getElementById("result").textContent = isNaN(preview) ? "" : preview;
+            } catch (error) {
+                // document.getElementById("result").value = "Error";
+            }
+        }
+
+        function solve() {
+            try {
+                const answer = eval(expression);
+                document.getElementById("result").textContent = answer;
+                expression = String(answer);
+                document.getElementById("expression").textContent = expression;
+            } catch (error) {
+               // document.getElementById("result").textContent = "Error";
+            }
+        }
+
+        function clr() {
+            expression = "";
+            document.getElementById("expression").textContent = "";
+            document.getElementById("result").textContent = "0";
+        } 
+
+        function del() {
+            expression = expression.slice(0, -1);
+            updateDisplay();
+        }
+
+        function percent() {
+            const match = expression.match(/(\d+\.?\d*)$/);
+            if (!match) return;
+
+            const lastNumber = parseFloat(match[0]);
+            const percentValue = lastNumber / 100;
+
+            expression = expression.slice(0, match.index) + percentValue;
+            updateDisplay();
+        }
+    </script>
+</body>
+</html> 
